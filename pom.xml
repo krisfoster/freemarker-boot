@@ -109,10 +109,34 @@
 
 	<!-- Profiles -->
 
-	<!--
-		Builds a native image
-		-->
 	<profiles>
+		<!--
+            Profiles the code
+            -->
+		<profile>
+			<id>profile</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2</version>
+						<configuration>
+							<executable>java</executable>
+							<arguments>
+								<argument>-agentlib:native-image-agent=config-output-dir=./src/main/resources/META-INF/native-image/</argument>
+								<argument>-classpath</argument>
+								<classpath />
+								<argument>com.example.demo.DemoApplication</argument>
+							</arguments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<!--
+            Builds a native image
+            -->
 		<profile>
 			<id>native-image</id>
 			<build>

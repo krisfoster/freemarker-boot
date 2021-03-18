@@ -38,7 +38,7 @@
   "methods":[{"name":"main","parameterTypes":["java.lang.String[]"] }]
 },
 {
-  "name":"com.example.demo.DemoApplication$$EnhancerBySpringCGLIB$$97faf0b7",
+  "name":"com.example.demo.DemoApplication$$EnhancerBySpringCGLIB$$25186ea9",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
@@ -1916,10 +1916,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"org.springframework.boot.loader.LaunchedURLClassLoader",
-  "methods":[{"name":"clearCache","parameterTypes":[] }]
-},
-{
   "name":"org.springframework.boot.logging.logback.ColorConverter",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1950,7 +1946,7 @@
   "allPublicMethods":true
 },
 {
-  "name":"org.springframework.boot.validation.beanvalidation.MethodValidationExcludeFilter$$Lambda$554/0x00000012005e5840",
+  "name":"org.springframework.boot.validation.beanvalidation.MethodValidationExcludeFilter$$Lambda$545/0x00000012005d6440",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
 },
