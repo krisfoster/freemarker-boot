@@ -10,10 +10,6 @@ public class DemoApplication {
 	public static void main(String[] args) {
 		ApplicationContext applicationContext =
 				SpringApplication.run(DemoApplication.class, args);
-
-		for (String name : applicationContext.getBeanDefinitionNames()) {
-			System.out.println(name);
-		}
 	}
 
 }
