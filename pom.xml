@@ -20,21 +20,20 @@
 	<properties>
 		<java.version>11</java.version>
 		<spring-native.version>0.9.0</spring-native.version>
+		<graalvm.version>21.0.0.2</graalvm.version>
+		<start-class>com.example.demo.DemoApplication</start-class>
 	</properties>
 
 	<dependencies>
+		<!-- Graal -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-freemarker</artifactId>
+			<groupId>org.graalvm.sdk</groupId>
+			<artifactId>graal-sdk</artifactId>
+			<version>${graalvm.version}</version>
+			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-freemarker</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
+
+		<!-- Spring deps -->
 		<dependency>
 			<groupId>org.springframework.experimental</groupId>
 			<artifactId>spring-native</artifactId>
@@ -42,9 +41,18 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-freemarker</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<!-- API, java.xml.bind module -->
 		<dependency>
 			<groupId>jakarta.xml.bind</groupId>
@@ -64,11 +72,6 @@
 			<artifactId>javax.activation</artifactId>
 			<version>1.2.0</version>
 		</dependency>
-		<!--dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>5.3.1</version>
-		</dependency-->
 	</dependencies>
 
 	<build>
@@ -77,34 +80,10 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<!-- Run config -->
-				<executions>
-					<execution>
-						<configuration>
-							<mainClass>com.example.demo.DemoApplication</mainClass>
-						</configuration>
-					</execution>
-				</executions>
-				<!--configuration>
-					<image>
-						<builder>paketobuildpacks/builder:tiny</builder>
-						<env>
-							<BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
-						</env>
-					</image>
-				</configuration-->
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.4</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-					</execution>
-				</executions>
+				<configuration>
+					<classifier>exec</classifier>
+					<mainClass>com.example.demo.DemoApplication</mainClass>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.experimental</groupId>
@@ -125,25 +104,45 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!--plugin>
-				<groupId>org.graalvm.nativeimage</groupId>
-				<artifactId>native-image-maven-plugin</artifactId>
-				<version>20.3.0</version>
-				<configuration>
-					<mainClass>com.example.demo.DemoApplication</mainClass>
-					<buildArgs>-H:+ReportExceptionStackTraces -Dspring.native.remove-yaml-support=true -Dspring.spel.ignore=true</buildArgs>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>native-image</goal>
-						</goals>
-						<phase>package</phase>
-					</execution>
-				</executions>
-			</plugin-->
 		</plugins>
 	</build>
+
+	<!-- Profiles -->
+
+	<!--
+		Builds a native image
+		-->
+	<profiles>
+		<profile>
+			<id>native-image</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.graalvm.nativeimage</groupId>
+						<artifactId>native-image-maven-plugin</artifactId>
+						<version>${graalvm.version}</version>
+						<configuration>
+							<!-- The native image build needs to know the entry point to your application -->
+							<mainClass>com.example.demo.DemoApplication</mainClass>
+							<buildArgs>
+								-H:+ReportExceptionStackTraces --no-fallback --no-server --verbose -Dspring.native.remove-yaml-support=true -Dspring.spel.ignore=true
+							</buildArgs>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>native-image</goal>
+								</goals>
+								<phase>package</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<!-- Repository definitions required for Spring -->
 	<repositories>
 		<repository>
 			<id>spring-releases</id>
